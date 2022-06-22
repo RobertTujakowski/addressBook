@@ -17,22 +17,29 @@ void waitForKey() {
     ch = getch();
 }
 
-string readSubString(string row, int &startString){ // poprawic -> przekazanie struct
-    string stringWithData="";
+struct SubString {
+    string txt;
+    int start;
+};
+
+SubString readSubString(string row, int startString){  // poprawic -> przekazanie struct
+    string stringWithData = "";
     int lengthString;
+    int endString = startString;
+    SubString oneData;
 
-    int pos = startString;
-    while (row[pos] != '|') pos++;
-    lengthString = pos - startString;
+    while (row[endString] != '|') endString++;
+    lengthString = endString - startString;
 
-    stringWithData = row.substr(startString, lengthString);
-    startString = startString + lengthString + 1;
+    oneData.txt = row.substr(startString, lengthString);
+    oneData.start = startString + lengthString + 1;
 
-    return stringWithData;
+    return oneData;
 }
 
 vector<PersonsData> loadAddresseesFromFile() {
     fstream file;
+    SubString oneData;
     string row;
 
     PersonsData person;
@@ -50,14 +57,25 @@ vector<PersonsData> loadAddresseesFromFile() {
                 return addresees;
             }
 
-            int startString = 0;
+            oneData.start = 0;
 
-            person.id      = atoi(readSubString(row, startString).c_str());
-            person.name    = readSubString(row, startString);
-            person.surname = readSubString(row, startString);
-            person.phone   = readSubString(row, startString);
-            person.email   = readSubString(row, startString);
-            person.address = readSubString(row, startString);
+            oneData = readSubString(row,oneData.start);
+            person.id      = atoi( (oneData.txt).c_str() );
+
+            oneData = readSubString(row,oneData.start);
+            person.name    = oneData.txt;
+
+            oneData = readSubString(row,oneData.start);
+            person.surname = oneData.txt;
+
+            oneData = readSubString(row,oneData.start);
+            person.phone   = oneData.txt;
+
+            oneData = readSubString(row,oneData.start);
+            person.email   = oneData.txt;
+
+            oneData = readSubString(row,oneData.start);
+            person.address = oneData.txt;
 
             addresees.push_back(person);
         }
@@ -396,5 +414,6 @@ int main() {
 
     } while (mainMenuChoice != 9);
 
+    waitForKey();
     return 0;
 }
