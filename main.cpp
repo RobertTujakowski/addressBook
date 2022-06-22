@@ -22,7 +22,7 @@ struct SubString {
     int start;
 };
 
-SubString readSubString(string row, int startString){  // poprawic -> przekazanie struct
+SubString readSubString(string row, int startString){
     string stringWithData = "";
     int lengthString;
     int endString = startString;
