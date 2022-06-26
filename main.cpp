@@ -1,4 +1,4 @@
-#include <iostream>
+ #include <iostream>
 #include <conio.h>
 #include <windows.h>
 #include <fstream>
@@ -109,8 +109,21 @@ void writeColouredLine(string txt1, string txt2) {
     cout << txt2 << endl;
 }
 
-int mainMenu() {
-    char mainMenuChoice;
+int loginMenu(){
+    char menuChoice;
+
+    system("cls");
+    writeColouredLine("1 ","Register");
+    writeColouredLine("2 ","Login");
+    writeColouredLine("9 ","Exit program");
+
+    menuChoice = getch();
+    return menuChoice - 48;
+}
+
+
+int userMenu() {
+    char menuChoice;
 
     system("cls");
     writeColouredLine("1 ","Add addressee");
@@ -119,10 +132,13 @@ int mainMenu() {
     writeColouredLine("4 ","Show all addresees");
     writeColouredLine("5 ","Delete addressee");
     writeColouredLine("6 ","Edit addressee");
+    cout << "-------------------" << endl;
+    writeColouredLine("7 ","Change password");
+    writeColouredLine("8 ","Logout");
     writeColouredLine("9 ","Exit program");
 
-    mainMenuChoice = getch();
-    return mainMenuChoice - 48;
+    menuChoice = getch();
+    return menuChoice - 48;
 }
 
 void showAddresees(vector<PersonsData> addresees, int idStart, int idEnd) {
@@ -370,15 +386,18 @@ vector<PersonsData> editAddresee(vector<PersonsData> addresees) {
 
 //--------------------------------------------------------------
 int main() {
-    int mainMenuChoice;
+    int userChoice;
+    int userNr;
     vector<PersonsData> addresees;
 
     addresees = loadAddresseesFromFile();
 
-    do {
-        mainMenuChoice = mainMenu();
+    userNr = loginMenu(); //
 
-        switch (mainMenuChoice) {
+    do {
+        userChoice = userMenu();
+
+        switch (userChoice) {
         case 1:
             addresees = addAddressee(addresees);
             break;
@@ -404,16 +423,15 @@ int main() {
             break;
         }
 
-        if (mainMenuChoice == 9) {
-            cout << endl;
-            writeColouredLine("ARRIVEDERCI"," :)");
+        if (userChoice == 9) {
             break;
         }
 
         waitForKey();
 
-    } while (mainMenuChoice != 9);
+    } while (userChoice != 9);
 
+    writeColouredLine("GOOD BYE"," :)");
     waitForKey();
     return 0;
 }
