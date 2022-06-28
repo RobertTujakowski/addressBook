@@ -1,4 +1,4 @@
- #include <iostream>
+#include <iostream>
 #include <conio.h>
 #include <windows.h>
 #include <fstream>
@@ -6,18 +6,18 @@
 
 using namespace std;
 
-struct PersonsData {
+struct PersonsData{
     int id;
     string name, surname, email, phone, address;
 };
 
-void waitForKey() {
+void waitForKey(){
     char ch;
     cout << endl << "press any key to continue";
     ch = getch();
 }
 
-struct SubString {
+struct SubString{
     string txt;
     int start;
 };
@@ -37,7 +37,7 @@ SubString readSubString(string row, int startString){
     return oneData;
 }
 
-vector<PersonsData> loadAddresseesFromFile() {
+vector<PersonsData> loadAddresseesFromFile(){
     fstream file;
     SubString oneData;
     string row;
@@ -89,27 +89,27 @@ vector<PersonsData> loadAddresseesFromFile() {
     return addresees;
 }
 
-int readLastId(vector<PersonsData> addresees) {
+int readLastId(vector<PersonsData> addresees){
     int vectorSize;
     vectorSize = addresees.size();
     return addresees[vectorSize-1].id;
 }
 
-void showMessageNoData() {
+void showMessageNoData(){
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),12);
     cout << endl << "THERE IS NO SUCH DATA";
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),15);
     Sleep(1000);
 }
 
-void writeColouredLine(string txt1, string txt2) {
+void writeColouredLine(string txt1, string txt2){
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),10);
     cout << txt1;
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),15);
     cout << txt2 << endl;
 }
 
-int loginMenu(){
+int mainMenu(){
     char menuChoice;
 
     system("cls");
@@ -121,8 +121,7 @@ int loginMenu(){
     return menuChoice - 48;
 }
 
-
-int userMenu() {
+int userMenu(){
     char menuChoice;
 
     system("cls");
@@ -141,7 +140,7 @@ int userMenu() {
     return menuChoice - 48;
 }
 
-void showAddresees(vector<PersonsData> addresees, int idStart, int idEnd) {
+void showAddresees(vector<PersonsData> addresees, int idStart, int idEnd){
     if (addresees.size() == 0) {
         showMessageNoData();
     } else {
@@ -160,7 +159,7 @@ void showAddresees(vector<PersonsData> addresees, int idStart, int idEnd) {
     }
 }
 
-string readLine(string data) {
+string readLine(string data){
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),10);
     cout << data;
     cin.sync();
@@ -170,7 +169,7 @@ string readLine(string data) {
     return line;
 }
 
-vector<PersonsData> addAddressee(vector<PersonsData> addresees) {
+vector<PersonsData> addAddressee(vector<PersonsData> addresees){
     PersonsData person;
     fstream file;
     file.open("adressBook.txt",ios::app);
@@ -204,7 +203,7 @@ vector<PersonsData> addAddressee(vector<PersonsData> addresees) {
     return addresees;
 }
 
-void writePersonsData() {
+void writePersonsData(){
     cout << endl;
     cout << "Name:     " << endl;
     cout << "Surname:  " << endl;
@@ -214,7 +213,7 @@ void writePersonsData() {
     cout << endl;
 }
 
-void searchByName(vector<PersonsData> addresees) {
+void searchByName(vector<PersonsData> addresees){
     if (addresees.size() == 0) {
         showMessageNoData();
     } else {
@@ -239,7 +238,7 @@ void searchByName(vector<PersonsData> addresees) {
     }
 }
 
-void searchBySurname(vector<PersonsData> addresees) {
+void searchBySurname(vector<PersonsData> addresees){
     if (addresees.size() == 0) {
         showMessageNoData();
     } else {
@@ -263,7 +262,7 @@ void searchBySurname(vector<PersonsData> addresees) {
     }
 }
 
-void writeAddreseesToFile(vector<PersonsData> addresees) {
+void writeAddreseesToFile(vector<PersonsData> addresees){
 
     fstream file;
     file.open("adressBook.txt",ios::out);
@@ -281,7 +280,7 @@ void writeAddreseesToFile(vector<PersonsData> addresees) {
     file.close();
 }
 
-vector<PersonsData> deleteAddresee(vector<PersonsData> addresees) {
+vector<PersonsData> deleteAddresee(vector<PersonsData> addresees){
     int id;
     system("cls");
     char choose_y_n;
@@ -319,7 +318,7 @@ vector<PersonsData> deleteAddresee(vector<PersonsData> addresees) {
     return addresees;
 }
 
-vector<PersonsData> editAddresee(vector<PersonsData> addresees) {
+vector<PersonsData> editAddresee(vector<PersonsData> addresees){
     int id;
     char menuChoice;
     int pos = 0;
@@ -384,15 +383,32 @@ vector<PersonsData> editAddresee(vector<PersonsData> addresees) {
     return addresees;
 }
 
+int getRegisterNr(){
+}
+
+int login(){
+}
+
 //--------------------------------------------------------------
-int main() {
+int main(){
     int userChoice;
+    int mainChoice;
     int userNr;
     vector<PersonsData> addresees;
 
     addresees = loadAddresseesFromFile();
 
-    userNr = loginMenu(); //
+    mainChoice = mainMenu();
+
+    if (mainChoice == 1) {
+        userNr = getRegisterNr();
+    }
+    else if (mainChoice == 2) {
+            userNr = login();
+    }
+    else {
+
+    }
 
     do {
         userChoice = userMenu();
