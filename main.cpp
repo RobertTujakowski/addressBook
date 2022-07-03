@@ -413,12 +413,11 @@ void userRegistration() {
         while (row[endString] != '|') endString++;
         lastUserId = atoi( (row.substr(0,endString)).c_str() );
 
-        cout << "lastUserId=" << lastUserId << endl;
-
         lastUserId++;
-        cout << "row=" << row << endl;
 
-        waitForKey();
+        file.close();
+
+        file.open("users.txt",ios::in | ios::app);
         file << endl;
 
     } else {
