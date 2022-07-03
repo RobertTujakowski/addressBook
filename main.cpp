@@ -6,23 +6,23 @@
 
 using namespace std;
 
-struct PersonsData{
+struct PersonsData {
     int id;
     string name, surname, email, phone, address;
 };
 
-void waitForKey(){
+void waitForKey() {
     char ch;
     cout << endl << "press any key to continue";
     ch = getch();
 }
 
-struct SubString{
+struct SubString {
     string txt;
     int start;
 };
 
-SubString readSubString(string row, int startString){
+SubString readSubString(string row, int startString) {
     string stringWithData = "";
     int lengthString;
     int endString = startString;
@@ -37,7 +37,7 @@ SubString readSubString(string row, int startString){
     return oneData;
 }
 
-vector<PersonsData> loadAddresseesFromFile(){
+vector<PersonsData> loadAddresseesFromFile() {
     fstream file;
     SubString oneData;
     string row;
@@ -53,7 +53,7 @@ vector<PersonsData> loadAddresseesFromFile(){
 
             getline(file,row);
 
-            if (row == ""){
+            if (row == "") {
                 return addresees;
             }
 
@@ -89,58 +89,65 @@ vector<PersonsData> loadAddresseesFromFile(){
     return addresees;
 }
 
-int readLastId(vector<PersonsData> addresees){
+int readLastId(vector<PersonsData> addresees) {
     int vectorSize;
     vectorSize = addresees.size();
     return addresees[vectorSize-1].id;
 }
 
-void showMessageNoData(){
+void showMessageNoData() {
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),12);
     cout << endl << "THERE IS NO SUCH DATA";
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),15);
     Sleep(1000);
 }
 
-void writeColouredLine(string txt1, string txt2){
+void writeColouredLine(string txt1, string txt2) {
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),10);
     cout << txt1;
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),15);
     cout << txt2 << endl;
 }
 
-int mainMenu(){
+int mainMenu() {
     char menuChoice;
 
     system("cls");
+    cout << "     MAIN MENU" << endl;
+    cout << "--------------------" << endl;
     writeColouredLine("1 ","Register");
     writeColouredLine("2 ","Login");
     writeColouredLine("9 ","Exit program");
 
-    menuChoice = getch();
-    return menuChoice - 48;
+    do {
+        menuChoice = getch();
+        menuChoice -= 48;
+    } while (menuChoice!=1 && menuChoice!=2 && menuChoice!=9);
+
+    return menuChoice;
 }
 
-int userMenu(){
+int userMenu() {
     char menuChoice;
 
     system("cls");
+    cout << "     USER MENU" << endl;
+    cout << "--------------------" << endl;
     writeColouredLine("1 ","Add addressee");
     writeColouredLine("2 ","Search by name");
     writeColouredLine("3 ","Search by surname");
     writeColouredLine("4 ","Show all addresees");
     writeColouredLine("5 ","Delete addressee");
     writeColouredLine("6 ","Edit addressee");
-    cout << "-------------------" << endl;
+    cout << "--------------------" << endl;
     writeColouredLine("7 ","Change password");
     writeColouredLine("8 ","Logout");
-    writeColouredLine("9 ","Exit program");
 
     menuChoice = getch();
     return menuChoice - 48;
 }
 
-void showAddresees(vector<PersonsData> addresees, int idStart, int idEnd){
+void showAddresees(vector<PersonsData> addresees, int idStart, int idEnd) {
     if (addresees.size() == 0) {
         showMessageNoData();
     } else {
@@ -159,7 +166,7 @@ void showAddresees(vector<PersonsData> addresees, int idStart, int idEnd){
     }
 }
 
-string readLine(string data){
+string readLine(string data) {
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),10);
     cout << data;
     cin.sync();
@@ -169,7 +176,7 @@ string readLine(string data){
     return line;
 }
 
-vector<PersonsData> addAddressee(vector<PersonsData> addresees){
+vector<PersonsData> addAddressee(vector<PersonsData> addresees) {
     PersonsData person;
     fstream file;
     file.open("adressBook.txt",ios::app);
@@ -203,7 +210,7 @@ vector<PersonsData> addAddressee(vector<PersonsData> addresees){
     return addresees;
 }
 
-void writePersonsData(){
+void writePersonsData() {
     cout << endl;
     cout << "Name:     " << endl;
     cout << "Surname:  " << endl;
@@ -213,7 +220,7 @@ void writePersonsData(){
     cout << endl;
 }
 
-void searchByName(vector<PersonsData> addresees){
+void searchByName(vector<PersonsData> addresees) {
     if (addresees.size() == 0) {
         showMessageNoData();
     } else {
@@ -238,7 +245,7 @@ void searchByName(vector<PersonsData> addresees){
     }
 }
 
-void searchBySurname(vector<PersonsData> addresees){
+void searchBySurname(vector<PersonsData> addresees) {
     if (addresees.size() == 0) {
         showMessageNoData();
     } else {
@@ -262,7 +269,7 @@ void searchBySurname(vector<PersonsData> addresees){
     }
 }
 
-void writeAddreseesToFile(vector<PersonsData> addresees){
+void writeAddreseesToFile(vector<PersonsData> addresees) {
 
     fstream file;
     file.open("adressBook.txt",ios::out);
@@ -280,7 +287,7 @@ void writeAddreseesToFile(vector<PersonsData> addresees){
     file.close();
 }
 
-vector<PersonsData> deleteAddresee(vector<PersonsData> addresees){
+vector<PersonsData> deleteAddresee(vector<PersonsData> addresees) {
     int id;
     system("cls");
     char choose_y_n;
@@ -318,7 +325,7 @@ vector<PersonsData> deleteAddresee(vector<PersonsData> addresees){
     return addresees;
 }
 
-vector<PersonsData> editAddresee(vector<PersonsData> addresees){
+vector<PersonsData> editAddresee(vector<PersonsData> addresees) {
     int id;
     char menuChoice;
     int pos = 0;
@@ -328,7 +335,7 @@ vector<PersonsData> editAddresee(vector<PersonsData> addresees){
     system("cls");
     id = atoi(readLine("write id of a person you want to edit: ").c_str());
 
-    for (int i=0; i<addresees.size(); i++){
+    for (int i=0; i<addresees.size(); i++) {
         if (addresees[i].id == id) {
             thisIdExist = true;
             pos = i;
@@ -355,27 +362,26 @@ vector<PersonsData> editAddresee(vector<PersonsData> addresees){
         menuChoice = getch() - 48;
     } while( menuChoice<1 || menuChoice>6 );
 
-    switch (menuChoice)
-    {
-        case 1:
-            data = readLine("Name : ");
-            addresees[pos].name = data;
+    switch (menuChoice) {
+    case 1:
+        data = readLine("Name : ");
+        addresees[pos].name = data;
         break;
-        case 2:
-            data = readLine("Surname : ");
-            addresees[pos].surname = data;
+    case 2:
+        data = readLine("Surname : ");
+        addresees[pos].surname = data;
         break;
-        case 3:
-            data = readLine("Phone : ");
-            addresees[pos].phone = data;
+    case 3:
+        data = readLine("Phone : ");
+        addresees[pos].phone = data;
         break;
-        case 4:
-            data = readLine("Email : ");
-            addresees[pos].email = data;
+    case 4:
+        data = readLine("Email : ");
+        addresees[pos].email = data;
         break;
-        case 5:
-            data = readLine("Address : ");
-            addresees[pos].address = data;
+    case 5:
+        data = readLine("Address : ");
+        addresees[pos].address = data;
         break;
     }
 
@@ -383,70 +389,110 @@ vector<PersonsData> editAddresee(vector<PersonsData> addresees){
     return addresees;
 }
 
-int getRegisterNr(){
+void userRegistration() {
+    int lastUserId = 0;
+    string row, name, password;
+    fstream file;
+
+    system("cls");
+
+    cout << "Write user name: ";
+    cin >> name;
+    cout << "Write password: ";
+    cin >> password;
+
+    file.open("users.txt",ios::in | ios::out);
+
+    if (file.good()) {
+
+        while (!file.eof()) {
+            getline(file,row);
+        }
+
+        int endString = 0;
+        while (row[endString] != '|') endString++;
+        lastUserId = atoi( (row.substr(0,endString)).c_str() );
+
+        cout << "lastUserId=" << lastUserId << endl;
+
+        lastUserId++;
+        cout << "row=" << row << endl;
+
+        waitForKey();
+        file << endl;
+
+    } else {
+        file.open("users.txt",ios::out);
+        lastUserId = 1;
+    }
+
+
+    file << lastUserId << "|" << name << "|" << password << "|";
+
+    file.close();
 }
 
-int login(){
+int login() {
 }
 
 //--------------------------------------------------------------
-int main(){
+int main() {
     int userChoice;
     int mainChoice;
     int userNr;
     vector<PersonsData> addresees;
 
     addresees = loadAddresseesFromFile();
-
-    mainChoice = mainMenu();
-
-    if (mainChoice == 1) {
-        userNr = getRegisterNr();
-    }
-    else if (mainChoice == 2) {
-            userNr = login();
-    }
-    else {
-
-    }
-
     do {
-        userChoice = userMenu();
+        mainChoice = mainMenu();
 
-        switch (userChoice) {
-        case 1:
-            addresees = addAddressee(addresees);
-            break;
-
-        case 2:
-            searchByName(addresees);
-            break;
-
-        case 3:
-            searchBySurname(addresees);
-            break;
-
-        case 4:
-            showAddresees(addresees,0,addresees.size()-1);
-            break;
-
-        case 5:
-            addresees = deleteAddresee(addresees);
-            break;
-
-        case 6:
-            addresees = editAddresee(addresees);
-            break;
+        if (mainChoice == 1) {
+            userRegistration();
+        } else if (mainChoice == 2) {
+            userNr = login();
         }
 
-        if (userChoice == 9) {
-            break;
-        }
+        if (mainChoice !=9 )
+            do {
+                userChoice = userMenu();
 
-        waitForKey();
+                switch (userChoice) {
+                case 1:
+                    addresees = addAddressee(addresees);
+                    break;
 
-    } while (userChoice != 9);
+                case 2:
+                    searchByName(addresees);
+                    break;
 
+                case 3:
+                    searchBySurname(addresees);
+                    break;
+
+                case 4:
+                    showAddresees(addresees,0,addresees.size()-1);
+                    break;
+
+                case 5:
+                    addresees = deleteAddresee(addresees);
+                    break;
+
+                case 6:
+                    addresees = editAddresee(addresees);
+                    break;
+                }
+
+                if (userChoice == 8) {
+                    break;
+                }
+
+                waitForKey();
+
+            } while (userChoice != 8);
+
+    } while (mainChoice != 9);
+
+    cout << endl;
     writeColouredLine("GOOD BYE"," :)");
     waitForKey();
     return 0;
