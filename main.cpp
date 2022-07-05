@@ -391,13 +391,13 @@ vector<PersonsData> editAddresee(vector<PersonsData> addresees) {
 
 void userRegistration() {
     int lastUserId = 0;
-    string row, name, password;
+    string row, login, password;
     fstream file;
 
     system("cls");
 
-    cout << "Write user name: ";
-    cin >> name;
+    cout << "Write login: ";
+    cin >> login;
     cout << "Write password: ";
     cin >> password;
 
@@ -426,32 +426,65 @@ void userRegistration() {
     }
 
 
-    file << lastUserId << "|" << name << "|" << password << "|";
+    file << lastUserId << "|" << login << "|" << password << "|";
 
     file.close();
 }
 
 int login() {
+    string row, login, password, userLogin, userPassword;
+    fstream file;
+    int id;
+
+    system("cls");
+
+    cout << "Write login: ";
+    cin >> userLogin;
+    cout << "Write password: ";
+    cin >> userPassword;
+
+    file.open("users.txt",ios::in);
+
+    while (!file.eof()) {
+        getline(file,row);
+
+        int startString = 0;
+        int stringLen = 1;
+        while (row[startString+stringLen] != '|') stringLen++;
+        id = atoi( (row.substr(0,stringLen)).c_str() );
+
+        startString += stringLen+1;
+        stringLen = 1;
+        while (row[startString+stringLen] != '|') stringLen++;
+        login = row.substr(startString,stringLen);
+
+        startString += stringLen+1;
+        stringLen = 1;
+        while (row[startString+stringLen] != '|') stringLen++;
+        password = row.substr(startString,stringLen);
+
+        if ( (login == userLogin) && (password == userPassword) ) break;
+    }
+
+    file.close();
+    return id;
 }
 
 //--------------------------------------------------------------
 int main() {
     int userChoice;
-    int mainChoice;
+    int mainMenuChoice;
     int userNr;
     vector<PersonsData> addresees;
 
-    addresees = loadAddresseesFromFile();
+    addresees = loadAddresseesFromFile(); // zmieniæ na kopiowanie do 2 pliku
     do {
-        mainChoice = mainMenu();
+        mainMenuChoice = mainMenu();
 
-        if (mainChoice == 1) {
+        if (mainMenuChoice == 1) {
             userRegistration();
-        } else if (mainChoice == 2) {
+        } else if (mainMenuChoice == 2) {
             userNr = login();
-        }
-
-        if (mainChoice !=9 )
             do {
                 userChoice = userMenu();
 
@@ -488,8 +521,9 @@ int main() {
                 waitForKey();
 
             } while (userChoice != 8);
+        }
 
-    } while (mainChoice != 9);
+    } while (mainMenuChoice != 9);
 
     cout << endl;
     writeColouredLine("GOOD BYE"," :)");
