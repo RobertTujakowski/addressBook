@@ -434,7 +434,7 @@ void userRegistration() {
 int login() {
     string row, login, password, userLogin, userPassword;
     fstream file;
-    int id;
+    int id;//
 
     system("cls");
 
