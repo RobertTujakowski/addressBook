@@ -7,7 +7,7 @@
 using namespace std;
 
 struct PersonsData {
-    int id;
+    int id, idUser;
     string name, surname, email, phone, address;
 };
 
@@ -37,7 +37,7 @@ SubString readSubString(string row, int startString) {
     return oneData;
 }
 
-vector<PersonsData> loadAddresseesFromFile() {
+vector<PersonsData> loadAddresseesFromFile(int idUser) {
     fstream file;
     SubString oneData;
     string row;
@@ -63,21 +63,26 @@ vector<PersonsData> loadAddresseesFromFile() {
             person.id      = atoi( (oneData.txt).c_str() );
 
             oneData = readSubString(row,oneData.start);
-            person.name    = oneData.txt;
+            person.idUser  = atoi( (oneData.txt).c_str() );
 
-            oneData = readSubString(row,oneData.start);
-            person.surname = oneData.txt;
+            if (person.idUser == idUser) {
+                oneData = readSubString(row,oneData.start);
+                person.name    = oneData.txt;
 
-            oneData = readSubString(row,oneData.start);
-            person.phone   = oneData.txt;
+                oneData = readSubString(row,oneData.start);
+                person.surname = oneData.txt;
 
-            oneData = readSubString(row,oneData.start);
-            person.email   = oneData.txt;
+                oneData = readSubString(row,oneData.start);
+                person.phone   = oneData.txt;
 
-            oneData = readSubString(row,oneData.start);
-            person.address = oneData.txt;
+                oneData = readSubString(row,oneData.start);
+                person.email   = oneData.txt;
 
-            addresees.push_back(person);
+                oneData = readSubString(row,oneData.start);
+                person.address = oneData.txt;
+
+                addresees.push_back(person);
+            }
         }
 
         file.close();
@@ -434,7 +439,7 @@ void userRegistration() {
 int login() {
     string row, login, password, userLogin, userPassword;
     fstream file;
-    int id;//
+    int id;
 
     system("cls");
 
@@ -474,41 +479,36 @@ int login() {
 int main() {
     int userChoice;
     int mainMenuChoice;
-    int userNr;
+    int idUser;
     vector<PersonsData> addresees;
 
-    addresees = loadAddresseesFromFile(); // zmieniæ na kopiowanie do 2 pliku
     do {
         mainMenuChoice = mainMenu();
 
         if (mainMenuChoice == 1) {
             userRegistration();
         } else if (mainMenuChoice == 2) {
-            userNr = login();
+            idUser = login();
             do {
-                userChoice = userMenu();
+                addresees = loadAddresseesFromFile(idUser);
 
+                userChoice = userMenu();
                 switch (userChoice) {
                 case 1:
                     addresees = addAddressee(addresees);
                     break;
-
                 case 2:
                     searchByName(addresees);
                     break;
-
                 case 3:
                     searchBySurname(addresees);
                     break;
-
                 case 4:
                     showAddresees(addresees,0,addresees.size()-1);
                     break;
-
                 case 5:
                     addresees = deleteAddresee(addresees);
                     break;
-
                 case 6:
                     addresees = editAddresee(addresees);
                     break;
