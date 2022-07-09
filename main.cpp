@@ -475,6 +475,48 @@ int login() {
     return id;
 }
 
+void changePassword(int idUser) {
+    string row, newPassword, oldPassword, login;
+    fstream oldFile, newFile;
+    int id;
+
+    system("cls");
+
+    cout << "Write new password: ";
+    cin >> newPassword;
+
+    oldFile.open("users.txt",ios::in);
+    newFile.open("users_temp.txt",ios::out | ios::app);
+
+    while (getline(oldFile,row)) {
+
+        int startString = 0;
+        int stringLen = 1;
+        while (row[startString+stringLen] != '|') stringLen++;
+        id = atoi( (row.substr(0,stringLen)).c_str() );
+
+        if (id != idUser) {
+            newFile << row;
+        }
+        else {
+            startString += stringLen+1;
+            stringLen = 1;
+            while (row[startString+stringLen] != '|') stringLen++;
+            login = row.substr(startString,stringLen);
+
+            newFile << id << "|" << login << "|" << newPassword << "|";
+        }
+
+        if (!oldFile.eof()) newFile << endl;
+    }
+
+    oldFile.close();
+    newFile.close();
+
+    remove("users.txt");
+    rename("users_temp.txt", "users.txt");
+}
+
 //--------------------------------------------------------------
 int main() {
     int userChoice;
@@ -498,19 +540,22 @@ int main() {
                     addresees = addAddressee(addresees);
                     break;
                 case 2:
-                    searchByName(addresees);
+                    searchByName(addresees); // OK
                     break;
                 case 3:
-                    searchBySurname(addresees);
+                    searchBySurname(addresees); // OK
                     break;
                 case 4:
-                    showAddresees(addresees,0,addresees.size()-1);
+                    showAddresees(addresees,0,addresees.size()-1); // OK
                     break;
                 case 5:
                     addresees = deleteAddresee(addresees);
                     break;
                 case 6:
                     addresees = editAddresee(addresees);
+                    break;
+                case 7:
+                    changePassword(idUser);
                     break;
                 }
 
