@@ -54,6 +54,7 @@ vector<PersonsData> loadAddresseesFromFile(int idUser) {
             getline(file,row);
 
             if (row == "") {
+                file.close();
                 return addresees;
             }
 
@@ -94,11 +95,13 @@ vector<PersonsData> loadAddresseesFromFile(int idUser) {
     return addresees;
 }
 
+/*
 int readLastId(vector<PersonsData> addresees) {
     int vectorSize;
     vectorSize = addresees.size();
     return addresees[vectorSize-1].id;
 }
+*/
 
 void showMessageNoData() {
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),12);
@@ -181,32 +184,48 @@ string readLine(string data) {
     return line;
 }
 
-vector<PersonsData> addAddressee(vector<PersonsData> addresees) {
+vector<PersonsData> addAddressee(vector<PersonsData> addresees, int idUser) {
     PersonsData person;
     fstream file;
-    file.open("adressBook.txt",ios::app);
+    string row;
+    int id;
+    SubString oneData;
+
+    person.idUser = idUser;
+
+    file.open("adressBook.txt",ios::in | ios::app);
+    getline(file,row);
+
+    if (row == "") { // first adresee
+        person.id = 1;
+        file.close();
+        file.open("adressBook.txt",ios::app);
+    }
+    else { // finding last id
+        while (!file.eof()) getline(file,row);
+
+        oneData = readSubString(row,0);
+        id  = atoi( (oneData.txt).c_str() );
+        person.id = id + 1;
+        file.close();
+        file.open("adressBook.txt",ios::app);
+        file << endl;
+    }
 
     system("cls");
 
-    if (addresees.size()>0) {
-        person.id = addresees[addresees.size()-1].id + 1;
-    } else {
-        person.id = 1;
-    }
-
-    if (person.id != 1) file << endl;
-
-    person.name = readLine("write name:    ");
+    person.name    = readLine("write name:    ");
     person.surname = readLine("write surname: ");
-    person.phone = readLine("write phone:   ");
-    person.email = readLine("write email:   ");
+    person.phone   = readLine("write phone:   ");
+    person.email   = readLine("write email:   ");
     person.address = readLine("write address: ");
 
-    file << person.id << '|';
-    file << person.name << '|';
+    file << person.id      << '|';
+    file << person.idUser  << '|';
+    file << person.name    << '|';
     file << person.surname << '|';
-    file << person.phone << '|';
-    file << person.email << '|';
+    file << person.phone   << '|';
+    file << person.email   << '|';
     file << person.address << '|';
 
     addresees.push_back(person);
@@ -537,7 +556,7 @@ int main() {
                 userChoice = userMenu();
                 switch (userChoice) {
                 case 1:
-                    addresees = addAddressee(addresees);
+                    addresees = addAddressee(addresees,idUser); // OK
                     break;
                 case 2:
                     searchByName(addresees); // OK
@@ -555,7 +574,7 @@ int main() {
                     addresees = editAddresee(addresees);
                     break;
                 case 7:
-                    changePassword(idUser);
+                    changePassword(idUser); // OK
                     break;
                 }
 
