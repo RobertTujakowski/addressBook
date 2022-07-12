@@ -95,14 +95,6 @@ vector<PersonsData> loadAddresseesFromFile(int idUser) {
     return addresees;
 }
 
-/*
-int readLastId(vector<PersonsData> addresees) {
-    int vectorSize;
-    vectorSize = addresees.size();
-    return addresees[vectorSize-1].id;
-}
-*/
-
 void showMessageNoData() {
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),12);
     cout << endl << "THERE IS NO SUCH DATA";
@@ -599,16 +591,16 @@ int main() {
                 userChoice = userMenu();
                 switch (userChoice) {
                 case 1:
-                    addresees = addAddressee(addresees,idUser); // OK
+                    addresees = addAddressee(addresees,idUser);
                     break;
                 case 2:
-                    searchByName(addresees); // OK
+                    searchByName(addresees);
                     break;
                 case 3:
-                    searchBySurname(addresees); // OK
+                    searchBySurname(addresees);
                     break;
                 case 4:
-                    showAddresees(addresees,0,addresees.size()-1); // OK
+                    showAddresees(addresees,0,addresees.size()-1);
                     break;
                 case 5:
                     addresees = deleteAddresee(addresees);
@@ -617,7 +609,7 @@ int main() {
                     addresees = editAddresee(addresees);
                     break;
                 case 7:
-                    changePassword(idUser); // OK
+                    changePassword(idUser);
                     break;
                 }
 
