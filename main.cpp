@@ -293,26 +293,8 @@ void searchBySurname(vector<PersonsData> addresees) {
     }
 }
 
-void writeAddreseesToFile(vector<PersonsData> addresees) {
-
-    fstream file;
-    file.open("adressBook.txt",ios::out);
-
-    for(int i=0; i<addresees.size(); i++) {
-        file << addresees[i].id << '|';
-        file << addresees[i].name << '|';
-        file << addresees[i].surname << '|';
-        file << addresees[i].phone << '|';
-        file << addresees[i].email << '|';
-        file << addresees[i].address << '|';
-        if ( i+1 < addresees.size() ) file << endl;
-    }
-
-    file.close();
-}
-
 vector<PersonsData> deleteAddresee(vector<PersonsData> addresees) {
-    int id;
+    int idToDelete;
     system("cls");
     char choose_y_n;
 
@@ -321,7 +303,7 @@ vector<PersonsData> deleteAddresee(vector<PersonsData> addresees) {
         return addresees;
     }
 
-    id = atoi(readLine("write id of a person you want to delete: ").c_str());
+    idToDelete = atoi(readLine("write id of a person you want to delete: ").c_str());
 
     writeColouredLine("Do you really want to delete this person date? ","y/n");
 
@@ -332,35 +314,61 @@ vector<PersonsData> deleteAddresee(vector<PersonsData> addresees) {
     if (choose_y_n == 'y') {
         bool personDeleted = false;
         for (int i=0; i < addresees.size(); i++) {
-            if (addresees[i].id == id) {
+            if (addresees[i].id == idToDelete) {
 
                 auto it = addresees.begin() + i;
                 addresees.erase(it);
 
-                writeAddreseesToFile(addresees);
                 cout << "Addresee deleted" << endl;
                 personDeleted = true;
                 break;
             }
         }
 
-        if ( !personDeleted ) cout << "Id is not exist - addresee did't deleted" << endl;
+        if ( personDeleted ) {
+            fstream oldFile;
+            fstream newFile;
+            string row;
+
+            oldFile.open("adressBook.txt",ios::in);
+            newFile.open("adressBook_temp.txt",ios::out);
+
+            while ( getline(oldFile,row) ) {
+                int endString = 0;
+                int idInRow;
+                while (row[endString] != '|') endString++;
+                idInRow = atoi( (row.substr(0,endString)).c_str() );
+
+                if (idInRow != idToDelete) {
+                    newFile << row;
+                    if ( !oldFile.eof() ) newFile << endl;
+                }
+            }
+            oldFile.close();
+            newFile.close();
+
+            remove("adressBook.txt");
+            rename("adressBook_temp.txt", "adressBook.txt");
+        }
+        else {
+            cout << "Id is not exist - addresee did't deleted" << endl;
+        }
     }
     return addresees;
 }
 
 vector<PersonsData> editAddresee(vector<PersonsData> addresees) {
-    int id;
+    int idToChange;
     char menuChoice;
     int pos = 0;
     string data;
     bool thisIdExist = false;
 
     system("cls");
-    id = atoi(readLine("write id of a person you want to edit: ").c_str());
+    idToChange = atoi(readLine("write id of a person you want to edit: ").c_str());
 
     for (int i=0; i<addresees.size(); i++) {
-        if (addresees[i].id == id) {
+        if (addresees[i].id == idToChange) {
             thisIdExist = true;
             pos = i;
         }
@@ -409,7 +417,42 @@ vector<PersonsData> editAddresee(vector<PersonsData> addresees) {
         break;
     }
 
-    if (menuChoice != 6) writeAddreseesToFile(addresees);
+    if (menuChoice != 6) {
+        fstream oldFile;
+        fstream newFile;
+        string row;
+
+        oldFile.open("adressBook.txt",ios::in);
+        newFile.open("adressBook_temp.txt",ios::out);
+
+        while ( getline(oldFile,row) ) {
+            int endString = 0;
+            int idInRow;
+            while (row[endString] != '|') endString++;
+            idInRow = atoi( (row.substr(0,endString)).c_str() );
+
+            if (idInRow != idToChange) {
+                newFile << row;
+            }
+            else {
+                newFile << addresees[pos].id      << '|';
+                newFile << addresees[pos].idUser  << '|';
+                newFile << addresees[pos].name    << '|';
+                newFile << addresees[pos].surname << '|';
+                newFile << addresees[pos].phone   << '|';
+                newFile << addresees[pos].email   << '|';
+                newFile << addresees[pos].address << '|';
+            }
+
+            if ( !oldFile.eof() ) newFile << endl;
+        }
+        oldFile.close();
+        newFile.close();
+
+        remove("adressBook.txt");
+        rename("adressBook_temp.txt", "adressBook.txt");
+    }
+
     return addresees;
 }
 
@@ -536,7 +579,7 @@ void changePassword(int idUser) {
     rename("users_temp.txt", "users.txt");
 }
 
-//--------------------------------------------------------------
+//----------------------------------------------------------------------------------
 int main() {
     int userChoice;
     int mainMenuChoice;
